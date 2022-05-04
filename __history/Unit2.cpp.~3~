@@ -23,7 +23,13 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm2::Button2Click(TObject *Sender)
 {
+	try
+	{
 		ReadThreadPtr->Terminate();
+	}
+	catch(std::exception& e)
+	{
+	};
 }
 //---------------------------------------------------------------------------
 

@@ -58,6 +58,7 @@ void __fastcall ReadThread::Execute()
 
 	while(true)
 	{
+		//Ресурсоемкая операция чтения данных
 		bool readResult = ReadFile(
 			  fileHandle,
 			  dataBuffer,

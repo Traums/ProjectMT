@@ -39,7 +39,7 @@ void __fastcall ReadThread::Execute()
 	if(fileHandle == INVALID_HANDLE_VALUE)
 	{
 	   Form2->Label1->Visible = True;
-	   Form2->Label1->Caption = "Ошибка чтения";
+	   Form2->Label1->Caption = "Требуются права администратора";
 	   CloseHandle(fileHandle);
 	   return;
 	}
@@ -52,12 +52,20 @@ void __fastcall ReadThread::Execute()
 		  &sectorOffset.HighPart,
 		  FILE_BEGIN
 		);
+	if(currentPosition != sectorOffset.LowPart)
+	{
+		Form2->Label1->Visible = True;
+		Form2->Label1->Caption = "Недопустимая позиция курсора";
+		CloseHandle(fileHandle);
+		return;
+	}
 	ProcessThreadPtr->Start();
 	DWORD bytesToRead = 1024*512;
 	DWORD bytesRead;
 
 	while(true)
 	{
+		//Ресурсоемкая операция чтения данных
 		bool readResult = ReadFile(
 			  fileHandle,
 			  dataBuffer,
@@ -68,7 +76,7 @@ void __fastcall ReadThread::Execute()
 		if(readResult == false || bytesRead != bytesToRead)
 		{
 			Form2->Label1->Visible = True;
-			Form2->Label1->Caption = "Ошибка чтения";
+			Form2->Label1->Caption = "Ошибка чтения данных";
 			break;
 		}
 		Sleep(100);
